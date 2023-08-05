@@ -4,6 +4,7 @@ import Table from "@tiptap/extension-table";
 import TableRow from "@tiptap/extension-table-row";
 import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
+import Underline from "@tiptap/extension-underline";
 import SlashCommand from "./slash-command";
 
 export const TipTapEditorExtensions = [
@@ -45,6 +46,11 @@ export const TipTapEditorExtensions = [
       width: 4,
     },
   }),
+  Underline.configure({
+    HTMLAttributes: {
+      class: "underline",
+    },
+  }),
   Placeholder.configure({
     // Not sure what the type of node is, so I'm using any
     placeholder: ({ node }: any) => {
@@ -59,7 +65,7 @@ export const TipTapEditorExtensions = [
   Table.configure({
     resizable: true,
     HTMLAttributes: {
-      class: "border border-slate-300 border-collapse",
+      class: "border border-slate-300",
     },
   }),
   TableRow.configure({

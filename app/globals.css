@@ -107,7 +107,7 @@ a {
 }
 
 .ProseMirror td p:first-child::before {
-  content: "type..";
+  content: "";
   float: left;
   color: #adb5bd;
   pointer-events: none;
@@ -115,7 +115,7 @@ a {
 }
 
 .ProseMirror th p:first-child::before {
-  content: "heading..";
+  content: "";
   float: left;
   color: #adb5bd;
   pointer-events: none;
