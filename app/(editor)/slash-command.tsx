@@ -4,7 +4,6 @@ import React, {
   useCallback,
   ReactNode,
   useRef,
-  useLayoutEffect,
 } from "react";
 import { Editor, Range, Extension } from "@tiptap/core";
 import Suggestion from "@tiptap/suggestion";
@@ -12,15 +11,17 @@ import { ReactRenderer } from "@tiptap/react";
 import tippy from "tippy.js";
 import {
   Bold,
+  Code2,
   Heading1,
   Heading2,
   Heading3,
   Italic,
   List,
   ListOrdered,
-  MessageSquarePlus,
+  ListTodo,
   Table,
   Text,
+  TextQuote,
 } from "lucide-react";
 
 interface CommandItemProps {
@@ -40,6 +41,8 @@ const Command = Extension.create({
     return {
       suggestion: {
         char: "/",
+        allowSpaces: true,
+        allowPrefixes: true,
         command: ({
           editor,
           range,
@@ -119,19 +122,20 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       },
     },
     {
-      title: "Bold",
-      description: "Make text bold.",
-      icon: <Bold size={18} />,
+      title: "Code",
+      description: "Add code block.",
+      icon: <Code2 size={18} />,
       command: ({ editor, range }: Command) => {
-        editor.chain().focus().deleteRange(range).setMark("bold").run();
+        editor.chain().focus().deleteRange(range).toggleCodeBlock().run();
       },
     },
     {
-      title: "Italic",
-      description: "Make text italic.",
-      icon: <Italic size={18} />,
+      title: "Table",
+      description: "Create a basic table.",
+      icon: <Table size={18} />,
       command: ({ editor, range }: Command) => {
-        editor.chain().focus().deleteRange(range).setMark("italic").run();
+        editor.chain().focus().deleteRange(range).run();
+        editor.commands.insertTable({ rows: 3, cols: 3, withHeaderRow: true });
       },
     },
     {
@@ -151,12 +155,19 @@ const getSuggestionItems = ({ query }: { query: string }) => {
       },
     },
     {
-      title: "Table",
-      description: "Create a basic table.",
-      icon: <Table size={18} />,
+      title: "To-do List",
+      description: "Track tasks with a to-do list",
+      icon: <ListTodo size={18} />,
       command: ({ editor, range }: Command) => {
-        editor.chain().focus().deleteRange(range).run();
-        editor.commands.insertTable({ rows: 3, cols: 3, withHeaderRow: true });
+        editor.chain().focus().deleteRange(range).toggleTaskList().run();
+      },
+    },
+    {
+      title: "Quote",
+      description: "Capture a quote.",
+      icon: <TextQuote size={18} />,
+      command: ({ editor, range }: Command) => {
+        editor.chain().focus().deleteRange(range).toggleBlockquote().run();
       },
     },
   ].filter((item) => {
@@ -223,9 +234,10 @@ const CommandList = ({
         return false;
       }
     };
-    document.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keydown", onKeyDown);
+
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keydown", onKeyDown);
     };
   }, [items, selectedIndex, setSelectedIndex, selectItem]);
 
@@ -240,14 +252,14 @@ const CommandList = ({
     if (item && container) {
       container.scrollTop = item.offsetTop - container.offsetTop;
 
-      item.focus();
+      // item.focus();
     }
 
-    if (selectedIndex === 0 && items.length > 0) {
-      setTimeout(() => {
-        selectedButtonRef.current?.focus();
-      }, 10);
-    }
+    // if (selectedIndex === 0 && items.length > 0) {
+    //   setTimeout(() => {
+    //     selectedButtonRef.current?.focus();
+    //   }, 10);
+    // }
   }, [selectedIndex, items]);
 
   return items.length > 0 ? (

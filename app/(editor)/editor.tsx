@@ -12,6 +12,7 @@ import {
   LucideIcon,
   MessageCircle,
   MoreHorizontal,
+  Sparkle,
 } from "lucide-react";
 
 export default function Editor() {
@@ -19,6 +20,9 @@ export default function Editor() {
     extensions: TipTapEditorExtensions,
     content: "<h1>Untitled</h1>",
   });
+
+  // TODO: For Image, Show a Modal which adds the image into the system. Upload it to server and display it
+  // TODO: Same for all file types
 
   return (
     <div
@@ -37,7 +41,9 @@ export default function Editor() {
         >
           <div className="flex items-center bg-white shadow-lg rounded-md border border-gray-200 overflow-hidden">
             <BubbleGroup>
-              <BubbleItem>Ask AI</BubbleItem>
+              <BubbleItem icon={Sparkle} iconBefore>
+                Ask AI
+              </BubbleItem>
             </BubbleGroup>
             <BubbleGroup>
               <BubbleItem>Turn into</BubbleItem>
